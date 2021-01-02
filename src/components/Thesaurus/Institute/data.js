@@ -1,26 +1,8 @@
-export const institute = [{
-    'ID': 1,
-    'InstituteName': 'Институт высоких технологий'
-}, {
-    'ID': 2,
-    'InstituteName': 'Институт архитектуры, строительства и дизайна'
-}, {
-    'ID': 3,
-    'InstituteName': 'Институт авиамашиностроения и транспорта'
-}, {
-    'ID': 4,
-    'InstituteName': 'Институт недропользования'
-}, {
-    'ID': 5,
-    'InstituteName': 'Институт энергетики'
-}, {
-    'ID': 6,
-    'InstituteName': 'Институт информационных технологий и анализа данных'
-}, {
-    'ID': 7,
-    'InstituteName': 'Институт экономики, управления и права'
-}, {
-    'ID': 8,
-    'InstituteName': 'Кафедра физическоой культуры'
-}];
+import Axios from 'axios'
 
+export var institute /*= [{"idInstitute":1,"nameInstitute":"hfdsjkhfksd"},{"idInstitute":2,"nameInstitute":"fdshjkhkjsdfbnv xnc"}]*/= function() {
+    Axios.get('http://localhost:3002/institute')
+        .then(res => {
+            return JSON.stringify(res.data);
+        })
+}
