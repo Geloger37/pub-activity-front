@@ -1,12 +1,16 @@
-import React, { Component } from 'react'
+import React from 'react'
 import DataGrid, { Column, Editing, Paging } from 'devextreme-react/data-grid'
 import DataSource from 'devextreme/data/data_source'
 import axios from 'axios'
 
-//data = [{"idInstitute" : 34, "nameInstitute" : "hkjsdhjk"}]
-
-export default class Institute extends Component {
+export default class Institute extends React.Component {
   
+  constructor() {
+    super()
+    this.state = {
+      data: []
+    };
+  }
 
   render () {
     return (
@@ -16,19 +20,20 @@ export default class Institute extends Component {
           id='gridContainer'
           dataSource= { new DataSource(
             {
-              key: 'idInstitute',
-              loadMode: 'processed',
-              load : function (loadOptions) {
-                  return axios.get('http://localhost:3002/institute')
-                              .then(res => { return JSON.stringify(res.data); })
-                              .catch( e => { throw e;} );
-              }
-              /*update : function() {
-                axios.get('http://localhost:3002/institute').then(res => { JSON.stringify(res.data)});
-                return this.data;
-              }*/
+              loadMode: 'raw',
+              dataSource: this.state.data,
               
-            } )}
+              load : function (loadOptions) {
+                return axios.get("/institute")
+                            .then(res => {
+                              console.log('kek');
+                              return res.data;
+                            })
+                            .catch( e => { throw e} );
+              }
+              
+            } ) }
+            
           keyExpr="idInstitute"
           //allowColumnReordering
           showBorders
