@@ -2,8 +2,9 @@
   "name": "front-pub",
   "version": "0.1.0",
   "private": true,
+  "proxy" : "http://localhost:3002",
   "dependencies": {
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "bootstrap-4-react": "0.0.59",
     "devextreme": "19.1-stable",
     "devextreme-react": "^19.1.12",
