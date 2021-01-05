@@ -1,9 +1,18 @@
 import React, {Component} from 'react'
 import DataGrid, {Column, Editing, Paging} from "devextreme-react/data-grid";
+import DataSource from 'devextreme/data/data_source'
+import axios from 'axios'
 
-import {titles} from "./data";
 
 export default class Title extends Component {
+
+    constructor() {
+        super()
+        this.state = {
+            data: []
+        };
+    }
+
     render() {
         return (
             <div style={{margin: "auto", width: "60%", marginTop: "100px"}}>
@@ -11,8 +20,54 @@ export default class Title extends Component {
 
                 <DataGrid
                     id={'gridContainer'}
-                    dataSource={titles}
-                    keyExpr={'id'}
+                    dataSource={ new DataSource(
+                        {
+                          loadMode: 'raw',
+                          dataSource: this.state.data,
+                          
+                          load : function (loadOptions) {
+                            return axios.get("/sci_rank")
+                                        .then(res => {
+                                          return res.data;
+                                        })
+                                        .catch( e => { throw e} );
+                          },
+                          insert: function(values) {
+                            return axios.post("/sci_rank", {
+                                          name: values.name_sci_rank
+                                        })
+                                        .then(res => {
+                                          return res
+                                        })
+                                        .catch(e => {
+                                          throw e
+                                        })
+                          },
+                          update: function(key, values) {
+                            return axios.put("/sci_rank", {
+                                          id: key.idSciRank,
+                                          name: values.name_sci_rank,
+                                        })
+                                        .then(res => {
+                                          return res
+                                        })
+                                        .catch(e => {
+                                          throw e
+                                        })
+                          },
+                          remove: function(key) {
+                            return axios.delete("/sci_rank", {
+                                          data: {id: key.idSciRank},
+                                        })
+                                        .then(res => {
+                                          return res
+                                        })
+                                        .catch(e => {
+                                          throw e
+                                        })
+                          }
+                        } ) }
+                    keyExpr={'idSciRank'}
                     allowColumnReordering={true}
                     showBorders={true}
                     onEditingStart={this.onEditingStart}
@@ -32,8 +87,8 @@ export default class Title extends Component {
                         allowAdding={true}
                         useIcons={true}/>
 
-                    <Column dataField={'id'} caption={'id'} width={50} visible={false}/>
-                    <Column dataField={'title'} caption={'Наименование ученого звания'}/>
+                    <Column dataField={'idSciRank'} caption={'id'} width={50} visible={false}/>
+                    <Column dataField={'name_sci_rank'} caption={'Наименование ученого звания'}/>
 
                 </DataGrid>
             </div>
