@@ -29,8 +29,41 @@ export default class Institute extends React.Component {
                               return res.data;
                             })
                             .catch( e => { throw e} );
+              },
+              insert: function(values) {
+                return axios.post("/institute", {
+                              name: values.nameInstitute
+                            })
+                            .then(res => {
+                              return res
+                            })
+                            .catch(e => {
+                              throw e
+                            })
+              },
+              update: function(key, values) {
+                return axios.put("/institute", {
+                              id: key.idInstitute,
+                              name: values.nameInstitute,
+                            })
+                            .then(res => {
+                              return res
+                            })
+                            .catch(e => {
+                              throw e
+                            })
+              },
+              remove: function(key) {
+                return axios.delete("/institute", {
+                              data: {id: key.idInstitute},
+                            })
+                            .then(res => {
+                              return res
+                            })
+                            .catch(e => {
+                              throw e
+                            })
               }
-              
             } ) }
             
           keyExpr="idInstitute"
