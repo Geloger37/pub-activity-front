@@ -26,7 +26,6 @@ export default class Institute extends React.Component {
               load : function (loadOptions) {
                 return axios.get("/institute")
                             .then(res => {
-                              console.log('kek');
                               return res.data;
                             })
                             .catch( e => { throw e} );
