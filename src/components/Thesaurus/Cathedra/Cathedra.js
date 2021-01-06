@@ -18,6 +18,9 @@ export default class Cathedra extends Component {
             .then(res => {
                 this.setState( {institute: res.data} )
             })
+            .catch(e => {
+              throw e
+            })
     }
 
     render() {
@@ -41,7 +44,7 @@ export default class Cathedra extends Component {
                           insert: function(values) {
                             if( (typeof values.nameCathedra !== 'undefined') && (typeof values.idInstitute !== 'undefined'))
                             return axios.post("/cathedra", {
-                                          name: (typeof values.nameCathedra !== 'undefined' ? values.nameCathedra: ""),
+                                          name: values.nameCathedra,
                                           id: values.idInstitute
                                         })
                                         .then(res => {

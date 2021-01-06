@@ -13,6 +13,8 @@ export default class Title extends Component {
         };
     }
 
+    
+
     render() {
         return (
             <div style={{margin: "auto", width: "60%", marginTop: "100px"}}>
