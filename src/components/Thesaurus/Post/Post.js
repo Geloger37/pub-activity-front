@@ -3,8 +3,6 @@ import DataGrid, {Column, Editing, Paging} from "devextreme-react/data-grid";
 import DataSource from "devextreme/data/data_source"
 import axios from "axios"
 
-import {post} from "./data";
-
 export default class Post extends Component {
 
     constructor() {
@@ -26,15 +24,17 @@ export default class Post extends Component {
                           dataSource: this.state.data,
                           
                           load : function (loadOptions) {
-                            return axios.get("/institute")
+                            return axios.get("/post")
                                         .then(res => {
                                           return res.data;
                                         })
                                         .catch( e => { throw e} );
                           },
                           insert: function(values) {
-                            return axios.post("/institute", {
-                                          name: values.nameInstitute
+                            if( (typeof values.postName !== 'undefined') && (typeof values.minPlanValue !== 'undefined'))
+                            return axios.post("/post", {
+                                          name: values.postName,
+                                          val: values.minPlanValue
                                         })
                                         .then(res => {
                                           return res
@@ -44,9 +44,10 @@ export default class Post extends Component {
                                         })
                           },
                           update: function(key, values) {
-                            return axios.put("/institute", {
-                                          id: key.idInstitute,
-                                          name: values.nameInstitute,
+                            return axios.put("/post", {
+                                          id: key.idPost,
+                                          name: (typeof values.postName !== 'undefined' ? values.postName : key.postName),
+                                          val: (typeof values.minPlanValue !== 'undefined' ? values.minPlanValue : key.minPlanValue),
                                         })
                                         .then(res => {
                                           return res
@@ -56,8 +57,8 @@ export default class Post extends Component {
                                         })
                           },
                           remove: function(key) {
-                            return axios.delete("/institute", {
-                                          data: {id: key.idInstitute},
+                            return axios.delete("/post", {
+                                          data: {id: key.idPost},
                                         })
                                         .then(res => {
                                           return res
