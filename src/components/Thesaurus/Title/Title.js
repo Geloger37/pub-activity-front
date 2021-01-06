@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import DataGrid, {Column, Editing, Paging} from "devextreme-react/data-grid";
+import DataGrid, {Column, Editing, FilterRow, Paging} from "devextreme-react/data-grid";
 import DataSource from 'devextreme/data/data_source'
 import axios from 'axios'
 
@@ -65,7 +65,7 @@ export default class Title extends Component {
                                           return res
                                         })
                                         .catch(e => {
-                                          throw e
+                                          throw 'Вы пытаетесь удалить элемент, который присутствует в другой таблице!'
                                         })
                           }
                         } ) }
@@ -81,6 +81,8 @@ export default class Title extends Component {
                     onRowRemoving={this.onRowRemoving}
                     onRowRemoved={this.onRowRemoved}>
 
+
+                    <FilterRow visible={true}/>
                     <Paging enabled={true}/>
                     <Editing
                         mode={'row'}

@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import DataGrid, {Column, Editing, Form, Lookup, Paging} from "devextreme-react/data-grid";
+import DataGrid, {Column, Editing, FilterRow, Form, Lookup, Paging} from "devextreme-react/data-grid";
 import {Item} from "devextreme-react/form"
 import DataSource from 'devextreme/data/data_source'
 import axios from 'axios'
@@ -134,7 +134,8 @@ export default class Employees extends Component {
                     // onRowRemoving={this.onRowRemoving}
                     // onRowRemoved={this.onRowRemoved}
                     >
-
+                    
+                    <FilterRow visible={true}/>
                     <Paging enabled={true}/>
                     <Editing
                         mode={'form'}
