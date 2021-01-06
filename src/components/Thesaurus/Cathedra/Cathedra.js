@@ -1,17 +1,82 @@
 import React, {Component} from 'react'
 import DataGrid, {Column, Editing, Lookup, Paging} from "devextreme-react/data-grid";
-
-import {cathedra, institute} from "./data";
+import DataSource from 'devextreme/data/data_source'
+import axios from 'axios'
 
 export default class Cathedra extends Component {
+
+    constructor() {
+        super()
+        this.state = {
+          cathedra: [],
+          institute: []
+        };
+      }
+
+    componentDidMount() {
+        axios.get("/institute")
+            .then(res => {
+                this.setState( {institute: res.data} )
+            })
+    }
+
     render() {
         return (
             <div style={{margin: "auto", width: "60%", marginTop: "100px"}}>
                 <h1 style={{textAlign: "center", marginBottom: "30px"}}>Кафедры</h1>
                 <DataGrid
                     id={'gridContainer'}
-                    dataSource={cathedra}
-                    keyExpr={'ID'}
+                    dataSource={ new DataSource(
+                        {
+                          loadMode: 'raw',
+                          dataSource: this.state.cathedra,
+                          
+                          load : function (loadOptions) {
+                            return axios.get("/cathedra")
+                                        .then(res => {
+                                          return res.data;
+                                        })
+                                        .catch( e => { throw e} );
+                          },
+                          insert: function(values) {
+                            if( (typeof values.nameCathedra !== 'undefined') && (typeof values.idInstitute !== 'undefined'))
+                            return axios.post("/cathedra", {
+                                          name: (typeof values.nameCathedra !== 'undefined' ? values.nameCathedra: ""),
+                                          id: values.idInstitute
+                                        })
+                                        .then(res => {
+                                          return res
+                                        })
+                                        .catch(e => {
+                                          throw e
+                                        })
+                          },
+                          update: function(key, values) {
+                            return axios.put("/cathedra", {
+                                          id: key.idCathedra,
+                                          name: (typeof values.nameCathedra !== 'undefined' ? values.nameCathedra : key.nameCathedra),
+                                          idInst: (typeof values.idInstitute !== 'undefined' ? values.idInstitute : key.idInstitute),
+                                        })
+                                        .then(res => {
+                                          return res
+                                        })
+                                        .catch(e => {
+                                          throw e
+                                        })
+                          },
+                          remove: function(key) {
+                            return axios.delete("/cathedra", {
+                                          data: {id: key.idCathedra},
+                                        })
+                                        .then(res => {
+                                          return res
+                                        })
+                                        .catch(e => {
+                                          throw e
+                                        })
+                          }
+                        } ) }
+                    keyExpr={'idCathedra'}
                     allowColumnReordering={true}
                     showBorders={true}
                     onEditingStart={this.onEditingStart}
@@ -31,10 +96,10 @@ export default class Cathedra extends Component {
                         allowAdding={true}
                         useIcons={true}/>
 
-                    <Column dataField={'ID'} caption={'ID'} width={50} visible={false}/>
-                    <Column dataField={'CathedraName'} caption={'Название Кафедры'}/>
-                    <Column dataField={'InstituteID'} caption={'Название инстиута'}>
-                        <Lookup dataSource={institute} valueExpr={'ID'} displayExpr={'InstituteName'}/>
+                    <Column dataField={'idCathedra'} caption={'ID'} width={50} visible={false}/>
+                    <Column dataField={'nameCathedra'} caption={'Название Кафедры'}/>
+                    <Column dataField={'idInstitute'} caption={'Название инстиута'}>
+                        <Lookup dataSource={this.state.institute} valueExpr={'idInstitute'} displayExpr={'nameInstitute'}/>
                     </Column>
 
                 </DataGrid>
